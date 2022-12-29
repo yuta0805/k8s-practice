@@ -1,0 +1,57 @@
+## ReplicaSetを管理することで、ローリングアップデートやロールバックなどを実現するリソース
+# DeploymentがReplicaSetを管理し、ReplicaSetがPodを管理する
+# ローリングアップデートはReplicaSetのヘルスチェックを行なった上で切り替えを行なっている
+# spec.templateの内容が変更があるとPodが変更され、replicasetにも波及してローリングアップデートされるapiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app
+spec:
+  selector:
+    matchLabels:
+      app: sample-app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+    spec:
+      containers:
+      - name: sample-app
+        image: nginx
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+--- 
+
+# rollingUpdateはアップデート中に許容される不足Pod数(maxUnaviable), 超過Pod(maxSurge)を設定可能です。maxUnaviable、maxSurgeは両方を０にすることはできない
+# rolling updateは古い新しいreplicaset が1つ立ち上がると 古いreplicasetを1つずつ(pod)落とす。これを繰り返しupdateする
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rollingupdate
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavaiable: 0 # アップデート中に不足Podが内容に設定
+      maxSurge: 1 #　replica数3であるがアップデート中に4つになることを許容する
+  selector:
+    matchLabels:
+      app: rollingupdate
+  template:
+    metadata:
+      labels:
+        app: rollingupdate
+    spec:
+      containers:
+      - name: nginx-rollingupdate
+        image: nginx:1.16
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 18080
