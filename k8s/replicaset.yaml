@@ -1,0 +1,20 @@
+# kubectl apply -f ./replicaset.yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: sample-replica-set
+
+spec:
+  replicas: 1
+  selector: #podを分別するプロパティ
+    matchLabels: # labelにマッチしたものを管理下におく
+      app: sample-pod # 実際のlabel
+  
+  template:
+    metadata:
+      labels:
+        app: sample-pod # replicasetで指定しているlabelと一致している必要がある
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.16
