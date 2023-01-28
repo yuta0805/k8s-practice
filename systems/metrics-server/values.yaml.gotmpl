@@ -1,0 +1,13 @@
+securePort: {{ .Values | get "securePort" "8443" }}
+
+{{ $isExtraArgs := .Values | getOrNil "extraArgs"}}
+{{ if $isExtraArgs }}
+extraArgs:
+  {{- range $key, $value := .Values.extraArgs }}
+  {{- if $value }}
+  {{ $key }}: {{ $value }}
+  {{- else }}
+  {{ $key }}:
+  {{- end }}
+  {{- end }}
+{{ end }}
