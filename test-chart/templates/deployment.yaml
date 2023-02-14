@@ -4,6 +4,15 @@ metadata:
   name: {{ include "test-chart.fullname" . }} 
   labels:
     {{- include "test-chart.labels" . | nindent 4 }}
+    # {{- if .Values.hoge -}}
+    # hoge: {{ .Chart.Name }}
+    # {{- else -}}
+    # hoge: {{ .Chart.Name }}
+    # {{- end -}}
+    # hoge: {{ .Chart.Name }}
+    {{ range $key, $value := .Values.test }}
+    {{ $key }}: {{ $value }}
+    {{ end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}

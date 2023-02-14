@@ -83,3 +83,8 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+hoge: ""
+
+test:
+  test: test
