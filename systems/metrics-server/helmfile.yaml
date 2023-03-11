@@ -1,0 +1,31 @@
+environments:
+  default: &default
+    values:
+      - chartVersion: 5.11.7
+  production:
+    <<: *default
+  staging:
+    <<: *default
+  development:
+    <<: *default
+
+repositories:
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+
+releases:
+  - name: metrics-server
+    chart: bitnami/metrics-server
+    namespace: kube-system
+    forceNamespace: kube-system
+    values:
+      - values.yaml.gotmpl
+
+# releases:
+#   - name: metrics-server
+#     namespace: kube-system
+#     forceNamespace: kube-system
+#     chart: ./charts/metrics-server-5-11-7
+#     values:
+#       - values.yaml.gotmpl
+#     wait: true

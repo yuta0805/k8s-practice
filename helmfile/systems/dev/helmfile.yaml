@@ -1,0 +1,14 @@
+helmfiles:
+  # - path: ../helmfile/helmfile.yaml
+  #   values: 
+  #     - hogehoge: yuta
+  #     - test: hgoe
+  # - ../../systems/metrics-server/helmfile.yaml
+  - path:  ../../../systems/metrics-server/helmfile.yaml
+    values:
+      - extraArgs:
+        --cert-dir: /tmp
+        --secure-port: 4443
+        --v: 2
+        --kubelet-insecure-tls: 
+        --kubelet-preferred-address-types: InternalIP
